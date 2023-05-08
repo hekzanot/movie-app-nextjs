@@ -1,18 +1,24 @@
 import React from 'react'
 import {notFound }from "next/navigation"
 import MovieContainer from '@/containers/movie'
-import Movies from '@/mocks/movies.json'
 
-async function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms))
+const API_URL = 'https://api.themoviedb.org/3'
+
+const getMovie = async (movieId) => {
+  const rest = await fetch(
+    `${API_URL}/movie/${movieId}?api_key=${process.env.API_KEY}`
+  )
+  return rest.json()
 }
+
 
 
 const MoviePage = async ({ params, searchParams }) => {
   // await delay(2000)
 
-  const movieDetail = Movies.results.find((movie) => movie.id.toString() === params.id)
-  console.log(params)
+
+  const movieDetail = await getMovie(params.id)
+  // console.log(params)
 
   if (!movieDetail) {
     notFound();
